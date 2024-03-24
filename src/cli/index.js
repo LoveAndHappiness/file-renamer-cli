@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const { program } = require('commander'); // Import the 'commander' module
+const { processFiles } = require('../fs'); // Import the 'processFiles' function from the 'fs' module
 
 program
     .name('file-renamer') // Set the name of your CLI application
@@ -10,10 +11,8 @@ program
 // Example command to rename files in the 'files' directory
 program
     .command('rename')
-    .description('Rename a file in the "files" directory')
-    .action(() => {
-        console.log(`Renaming file...`);
-    });
+    .description('Rename a file in the "files" directory and move them to the "renamed" directory')
+    .action(processFiles);
 
 // Parse the command line arguments
 program.parse(process.argv);
