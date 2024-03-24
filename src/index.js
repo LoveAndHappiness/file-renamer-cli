@@ -1,2 +1,2 @@
 // Common utilities
-// Common utility functions
+// Common utility functions that are used across the application.
