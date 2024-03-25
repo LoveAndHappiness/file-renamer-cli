@@ -12,6 +12,7 @@ async function processFiles() {
     try {
         // Read the contents of the 'files' directory
         const files = await fs.readdir(filesDir);
+        console.log ('Files:', files);
 
         // Process each file in the 'files' directory
         for (const file of files) {
@@ -26,8 +27,23 @@ async function processFiles() {
             console.log(`Processing file: ${file}...`);
             await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulated delay
 
+            // Extract text from PDF files
+            console.log('Extracting text from PDF...');
+
+            const dataBuffer = await fs.readFile(originalPath);
+            try {
+                const data = await pdfParse(dataBuffer);
+                // Consider using only the text from the first 1-2 pages if applicable
+                const text = data.text; // You might want to trim or process the text further
+                console.log(`Extracted text from ${path.basename(originalPath)}:`, text.substring(0, 2000));
+                
+            } catch (error) {
+                console.error(`Error extracting text from ${originalPath}:`, error);
+                return '';
+            }
+
             // Move the file to the 'renamed' directory
-            await fs.rename(originalPath, processedPath);
+            // await fs.rename(originalPath, processedPath);
             console.log(`${file} has been processed and moved.`);
         }
     } catch (error) {
@@ -41,7 +57,7 @@ async function extractTextFromPDF(pdfPath) {
         const data = await pdfParse(dataBuffer);
         // Consider using only the text from the first 1-2 pages if applicable
         const text = data.text; // You might want to trim or process the text furhter
-        console.log(`Extracted text from ${path.basename(pdfPath)}:`, text.substring(0, 100));
+        console.log(`Extracted text from ${path.basename(pdfPath)}:`, text.substring(0, 2000));
         return data.text;
     } catch (error) {
         console.error('Error extracting text from ${pdfPath}:', error);
