@@ -3,6 +3,7 @@
 const pdfParse = require('pdf-parse');
 const fs = require('fs').promises;
 const path = require('path');
+const { getNewFileName } = require('../openai/api');
 
 // Path to the 'files' directory from 'src/fs/index.js'
 const filesDir = path.join(__dirname, '../../files');
@@ -12,7 +13,6 @@ async function processFiles() {
     try {
         // Read the contents of the 'files' directory
         const files = await fs.readdir(filesDir);
-        console.log ('Files:', files);
 
         // Process each file in the 'files' directory
         for (const file of files) {
@@ -41,6 +41,14 @@ async function processFiles() {
                 console.error(`Error extracting text from ${originalPath}:`, error);
                 return '';
             }
+
+            // Get new filename from OpenAI API
+            // const newFileName = await getNewFileName(text);
+            console.log('Making response to OpenAI API...');
+            const newFileName = await getNewFileName("text from pdf file");
+            await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulated delay
+            console.log('Response received from OpenAI API.');
+            console.log('New Filename generated');
 
             // Move the file to the 'renamed' directory
             // await fs.rename(originalPath, processedPath);

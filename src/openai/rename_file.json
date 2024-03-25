@@ -1,0 +1,16 @@
+{
+    "name": "rename_file",
+    "description": "Generate a new name for a file based on its content",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "content": {
+                "type": "string",
+                "description": "The content of the file"
+            }
+        },
+        "required": [
+            "content"
+        ]
+    }
+}
