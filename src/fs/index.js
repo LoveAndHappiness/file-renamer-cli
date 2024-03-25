@@ -1,5 +1,6 @@
 // Main file system operations (read, rename, move)
 
+const pdfParse = require('pdf-parse');
 const fs = require('fs').promises;
 const path = require('path');
 
@@ -34,5 +35,20 @@ async function processFiles() {
     }
 }
 
+async function extractTextFromPDF(pdfPath) {
+    const dataBuffer = await fs.readFile(pdfPath);
+    try {
+        const data = await pdfParse(dataBuffer);
+        // Consider using only the text from the first 1-2 pages if applicable
+        const text = data.text; // You might want to trim or process the text furhter
+        console.log(`Extracted text from ${path.basename(pdfPath)}:`, text.substring(0, 100));
+        return data.text;
+    } catch (error) {
+        console.error('Error extracting text from ${pdfPath}:', error);
+        return '';
+    }
+}
+
+
 // Export the function for use in other parts of your application
-module.exports = { processFiles };
+module.exports = { processFiles, extractTextFromPDF };
