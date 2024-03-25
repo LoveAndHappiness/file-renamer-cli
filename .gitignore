@@ -1,2 +1,4 @@
 # -gotogmpre
 node_modules/
+files/*
+files/renamed/*
