@@ -31,28 +31,31 @@ async function processFiles() {
             console.log('Extracting text from PDF...');
 
             const dataBuffer = await fs.readFile(originalPath);
+            let text; // Define text variable to store extracted text
             try {
                 const data = await pdfParse(dataBuffer);
                 // Consider using only the text from the first 1-2 pages if applicable
-                const text = data.text; // You might want to trim or process the text further
+                text = data.text.substring(0, 2000); // Assign a value to text here
                 console.log(`Extracted text from ${path.basename(originalPath)}:`, text.substring(0, 2000));
-                
             } catch (error) {
                 console.error(`Error extracting text from ${originalPath}:`, error);
                 return '';
-            }
+}
 
             // Get new filename from OpenAI API
-            // const newFileName = await getNewFileName(text);
             console.log('Making response to OpenAI API...');
-            const newFileName = await getNewFileName("text from pdf file");
+            let newFileName = await getNewFileName({ fileContent: text });
+            newFileName = newFileName.replace(/"/g, ''); // Remove double quotes from filename
             await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulated delay
             console.log('Response received from OpenAI API.');
-            console.log('New Filename generated');
+            console.log(`New Filename generated: ${newFileName}`);
 
-            // Move the file to the 'renamed' directory
-            // await fs.rename(originalPath, processedPath);
-            console.log(`${file} has been processed and moved.`);
+            // Actually renaming the file
+            const newFilePath = path.join(processedDir, `${newFileName}${path.extname(originalPath)}`);
+            // Rename the file
+            await fs.rename(originalPath, newFilePath);
+
+            console.log(`${file} has been processed and moved to ${newFilePath}.`);
         }
     } catch (error) {
         console.error('Error processing files:', error);

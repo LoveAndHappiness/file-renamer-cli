@@ -3,3 +3,5 @@ node_modules/
 files/*
 files/renamed/*
 .env
+.property_list
+src/openai/property_list.json
