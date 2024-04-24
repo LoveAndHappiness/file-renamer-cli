@@ -36,7 +36,7 @@ async function processFiles() {
                 const data = await pdfParse(dataBuffer);
                 // Consider using only the text from the first 1-2 pages if applicable
                 text = data.text.substring(0, 2000); // Assign a value to text here
-                console.log(`Extracted text from ${path.basename(originalPath)}:`, text.substring(0, 2000));
+                console.log(`Extracted text from ${path.basename(originalPath)}:`, text.substring(0, 4000));
             } catch (error) {
                 console.error(`Error extracting text from ${originalPath}:`, error);
                 return '';

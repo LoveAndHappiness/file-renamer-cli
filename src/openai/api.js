@@ -13,7 +13,7 @@ async function getNewFileName({ fileContent }) {
         messages: [
             {
                 role: 'system',
-                content: "Change the name of this file to something more descriptive."
+                content: 'Rename the file in German according to the following schema: "<YYYY-MM-DD> - <sender> - <summary maximum 4 words> - W-<reference>". The reference is the name of the street with the number, e.g. "Berliner Str. 121" or "Musterstraße 12".'
             },
             {
                 role: 'user',
