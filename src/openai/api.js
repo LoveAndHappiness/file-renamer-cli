@@ -9,11 +9,11 @@ const openai = new OpenAI({
 async function getNewFileName({ fileContent }) {
     // Create a chat completion
     const chatCompletion = await openai.chat.completions.create({
-        model: 'gpt-4',
+        model: 'gpt-3.5-turbo',
         messages: [
             {
                 role: 'system',
-                content: 'Rename the file in German according to the following schema: "<YYYY-MM-DD> - <sender> - <summary maximum 4 words> - W-<reference>". The reference is the name of the street with the number, e.g. "Berliner Str. 121" or "Musterstraße 12".'
+                content: 'Rename the file in German according to the following schema: "<YYYY-MM-DD> - <sender> - <summary maximum 4 words> - W-<reference>". The reference is the name of the street with the number, e.g. "Berliner Str. 121" or "Musterstraße 12". Here is an example: "2022-01-01 - John Doe - Kündigung Wohnung - W-Musterstraße 12".'
             },
             {
                 role: 'user',
