@@ -1,4 +1,3 @@
-const fs = require('fs');
 require('dotenv').config();
 const OpenAI = require('openai');
 
@@ -6,9 +5,14 @@ const openai = new OpenAI({
     apiKey: process.env["OPENAI_API_KEY"]
 });
 
-async function getNewFileName({ fileContent }) {
+async function getNewFileName({ fileContent: text }) {
+    console.log('File content received:', text);  // Log to check what content is being received
+    if (!text) {
+        throw new Error('File content is null or undefined.');
+    }
+    console.log('Making response to OpenAI API...');
     // Create a chat completion
-    const chatCompletion = await openai.chat.completions.create({
+    const response = await openai.chat.completions.create({
         model: 'gpt-3.5-turbo',
         messages: [
             {
@@ -17,18 +21,20 @@ async function getNewFileName({ fileContent }) {
             },
             {
                 role: 'user',
-                content: fileContent
+                content: text
             }
         ]
-    })
-
-    // Log the chatCompletion object
-    console.log(JSON.stringify(chatCompletion, null, 2));
+    });
+    console.log('Response received from OpenAI API.');
+    console.log(response.choices[0].message);
+    let newFileName = response.choices[0].message.content.trim();
+    newFileName = newFileName.replace(/"/g, '');
+    console.log(`New Filename: ${newFileName}`);
     
-    // Check if chatCompletion.choices[0].message.content is not undefined
-    if (chatCompletion.choices && chatCompletion.choices[0] && chatCompletion.choices[0].message && chatCompletion.choices[0].message.content) {
+    // Check if newFileName is not undefined
+    if (newFileName) {
         // Return the generated filename
-        return chatCompletion.choices[0].message.content.trim();
+        return newFileName;
     } else {
         throw new Error('No text returned from OpenAI API');
     }

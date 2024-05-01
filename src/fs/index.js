@@ -29,25 +29,17 @@ async function processSingleFile(file) {
     await simulateDelay(100);
 
     const text = await extractTextFromPDF(originalPath, { maxLength: 4000 });
-    let newFileName = await generateNewFileName(text);
+    console.log(`Text extracted from ${file}:`, text);
+
+    let newFileName = await getNewFileName({ fileContent: text });
     const newFilePath = path.join(processedDir, `${newFileName}${path.extname(originalPath)}`);
     await renameFile(originalPath, newFilePath);
 
-    console.log(`${file} has been processed and moved to ${newFilePath}.`);
+    console.log(`Renaming successful.`);
 }
 
 async function simulateDelay(duration) {
     return new Promise(resolve => setTimeout(resolve, duration));
-}
-
-async function generateNewFileName(text) {
-    console.log('Making response to OpenAI API...');
-    let newFileName = await getNewFileName({ fileContent: text });
-    newFileName = newFileName.replace(/"/g, '');
-    await simulateDelay(2000);
-    console.log('Response received from OpenAI API.');
-    console.log(`New Filename generated: ${newFileName}`);
-    return newFileName;
 }
 
 async function renameFile(originalPath, newFilePath) {
