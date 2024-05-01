@@ -9,7 +9,7 @@ const openai = new OpenAI({
 async function getNewFileName({ fileContent }) {
     // Create a chat completion
     const chatCompletion = await openai.chat.completions.create({
-        model: 'gpt-4',
+        model: 'gpt-3.5-turbo',
         messages: [
             {
                 role: 'system',

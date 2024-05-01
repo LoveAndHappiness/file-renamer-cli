@@ -1,6 +1,6 @@
 {
   "name": "getNewFileName",
-  "description": "Generates a new file name based on the content and type of the file",
+  "description": "Generates a new file name based on the content of the file",
   "parameters": {
     "type": "object",
     "properties": {
