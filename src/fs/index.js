@@ -4,6 +4,7 @@ const pdfParse = require('pdf-parse');
 const fs = require('fs').promises;
 const path = require('path');
 const { getNewFileName } = require('../openai/api');
+const { getReferenceCode } = require('../openai/getReferenceCode');
 
 // Path to the 'files' directory from 'src/fs/index.js'
 const filesDir = path.join(__dirname, '../../files');
@@ -29,11 +30,18 @@ async function processSingleFile(file) {
     await simulateDelay(100);
 
     const text = await extractTextFromPDF(originalPath, { maxLength: 4000 });
-    console.log(`Text extracted from ${file}:`, text);
+    // console.log(`Text extracted from ${file}:`, text);
+    console.log(`Text extracted successfully from PDF.`);
+    
+    // Get the reference code from the file
+    console.log("Getting reference code...");
+    let referenceCode = await getReferenceCode({ fileContent: text });
+    console.log(`Reference code: ${referenceCode}`);
 
-    let newFileName = await getNewFileName({ fileContent: text });
-    const newFilePath = path.join(processedDir, `${newFileName}${path.extname(originalPath)}`);
-    await renameFile(originalPath, newFilePath);
+    // VORRÜBERGEHEND AUSSER BETRIEB
+    // let newFileName = await getNewFileName({ fileContent: text });
+    // const newFilePath = path.join(processedDir, `${newFileName}${path.extname(originalPath)}`);
+    // await renameFile(originalPath, newFilePath);
 
     console.log(`Renaming successful.`);
 }
@@ -54,7 +62,6 @@ async function extractTextFromPDF(pdfPath, options = { maxLength: 4000 }) {
         if (options.maxLength) {
             text = text.substring(0, options.maxLength);
         }
-        console.log(`Extracted text from ${path.basename(pdfPath)}:`, text.substring(0, 200));
         return text;
     } catch (error) {
         console.error(`Error extracting text from ${pdfPath}:`, error);
