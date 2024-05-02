@@ -1,12 +1,24 @@
 {
   "name": "getNewFileName",
-  "description": "Generates a new file name based on the content of the file",
+  "description": "Generates a new file name based on the content and type of the file",
   "parameters": {
     "type": "object",
     "properties": {
-      "fileContent": {
+      "date": {
         "type": "string",
-        "description": "A text snippet or summary from the file"
+        "description": "The date from the file."
+      },
+      "name": {
+        "type": "string",
+        "description": "The name of the person or entity that wrote the file e.g. the sender. Exceptions are files where the sender is Expimo, then just use the title of the file, e.g. 'Mietvertrag' or 'Übergabeprotokoll'"
+      },
+      "summary": {
+        "type": "string",
+        "description": "Short summary maximum 4 words of the contents of the file, sometimes name of the tenant."
+      },
+      "reference": {
+        "type": "string",
+        "description": "Reference of the file, which is the street name + house number that is selected from the property_list.json file that best fits the content of the file."
       }
     },
     "required": [

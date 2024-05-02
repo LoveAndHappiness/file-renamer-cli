@@ -1,0 +1,16 @@
+{
+  "name": "get_reference_code",
+  "description": "Determine which reference_code fits best to a provided file content from the uploaded property_list.json file",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "reference_code": {
+        "type": "string",
+        "description": "A selected code from the provided property_list.json file that most of the times has the following structure: 'W-Berliner Str. 113' or 'W-Handelstraße 7'"
+      }
+    },
+    "required": [
+      "reference_code"
+    ]
+  }
+}
