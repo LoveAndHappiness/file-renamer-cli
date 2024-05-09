@@ -27,16 +27,17 @@ async function processSingleFile(file) {
     const processedPath = path.join(processedDir, file);
 
     console.log(`Processing file: ${file}...`);
-    await simulateDelay(100);
 
     const text = await extractTextFromPDF(originalPath, { maxLength: 4000 });
     // console.log(`Text extracted from ${file}:`, text);
     console.log(`Text extracted successfully from PDF.`);
-    
+    console.log("\n");
+
     // Get the reference code from the file
     console.log("Getting reference code...");
     let referenceCode = await getReferenceCode({ fileContent: text });
     console.log(`Reference code: ${referenceCode}`);
+    console.log("\n");
 
     // VORRÜBERGEHEND AUSSER BETRIEB
     // let newFileName = await getNewFileName({ fileContent: text });
@@ -44,10 +45,6 @@ async function processSingleFile(file) {
     // await renameFile(originalPath, newFilePath);
 
     console.log(`Renaming successful.`);
-}
-
-async function simulateDelay(duration) {
-    return new Promise(resolve => setTimeout(resolve, duration));
 }
 
 async function renameFile(originalPath, newFilePath) {
