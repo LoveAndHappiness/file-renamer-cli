@@ -15,3 +15,7 @@ Before using File Renamer CLI, make sure you have the following installed on you
 2. Install dependencies (npm install)
 3. Create files directories and put some readable pdf files inside
 4. Run code "npm run start rename"
+
+
+## How does Function Calling work in OpenAI?
+In an API call, we "describe" the function we want to call and the model outputs a JSON object containing arguments (to call one or many functions)

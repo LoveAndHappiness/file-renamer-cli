@@ -16,8 +16,14 @@ async function getReferenceCode({ fileContent: text }) {
 
     // Read property_list.json using fs.promises.readFile
     const referenceCodes = JSON.parse(await fs.promises.readFile('property_list.json', 'utf8'));
+    // console.log(referenceCodes);
 
     console.log('Making API call to Reference Code Assistant on OpenAI...');
+    // const thread = await client.beta.threads.create();
+    // const message = client.beta.threads.messages.create(thread.id, {
+    //     role: 'user',
+    //     content: text
+    // });
 
     // Generate a random index and select a reference code
     const randomIndex = Math.floor(Math.random() * referenceCodes.length);
