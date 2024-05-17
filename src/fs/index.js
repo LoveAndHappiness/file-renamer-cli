@@ -44,16 +44,25 @@ async function processFiles() {
 
             // Get new filename from OpenAI API
             console.log('Making response to OpenAI API...');
+
+            // The OpenAI API will make a response similar to this:
+            // { "name": name, "objectname": objectname }
             let newFileName = await getNewFileName({ fileContent: text });
-            newFileName = newFileName.replace(/"/g, ''); // Remove double quotes from filename
-            await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulated delay
+            // newFileName = newFileName.replace(/"/g, ''); // Remove double quotes from filename
+            console.log(newFileName);
+            console.log(JSON.parse(newFileName).name);
+            // newFileName = JSON.parse(newFileName).name;
+            
+            // let objektName = JSON.parse(newFileName).objectname;
+            //  await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulated delay
             console.log('Response received from OpenAI API.');
             console.log(`New Filename generated: ${newFileName}`);
+            console.log(`Object Name: ${objektName}`);
 
             // Actually renaming the file
-            const newFilePath = path.join(processedDir, `${newFileName}${path.extname(originalPath)}`);
+            // const n ewFilePath = path.join(processedDir, `${newFileName}${path.extname(originalPath)}`);
             // Rename the file
-            await fs.rename(originalPath, newFilePath);
+            // await fs.rename(originalPath, newFilePath);
 
             console.log(`${file} has been processed and moved to ${newFilePath}.`);
         }
