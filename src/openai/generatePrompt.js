@@ -3,7 +3,7 @@ function generatePrompt(properties) {
     1. Date in the format YYYY-MM-DD.
     2. Sender, abbreviated where applicable (e.g., 'Rechtsanwalt' as 'RA').
     3. A summary of the content in German, up to four words.
-    4. The object name, chosen from the predefined list, formatted as '[City Code]-[Street Name and Number]'. If no match is found, use 'Unknown Object'.
+    4. The object name, chosen from the predefined list, formatted as '[City Code]-[Street Name and Number]'. If no match is found, use 'Unknown Object'. Make sure you don't use just the recipient address, since the property management company Expimo is located at the same address as the property we manage.
     5. Classify the document into one of the following categories:
        - Grundabgaben
        - Kontoauszüge

@@ -28,7 +28,6 @@ async function processFiles() {
             let text;
             try {
                 text = await extractTextFromPDF(originalPath);
-                console.log(`Extracted text from ${path.basename(originalPath)}:`, text.substring(0, 4000));
             } catch (error) {
                 console.error(`Error extracting text from ${originalPath}:`, error);
                 continue;
@@ -40,15 +39,15 @@ async function processFiles() {
             }
 
             console.log(`Length of extracted text: ${text.length}`);
-            console.log(`Content of extracted text: ${text}`);
-
             console.log('Making request to OpenAI API...');
+            console.log(`\n`);
 
             let fileData;
             try {
                 fileData = await getFileData({ fileContent: text, properties });
                 fileData = JSON.parse(fileData);
-                console.log(`File data received: ${JSON.stringify(fileData)}`);
+                console.log(`File data: ${JSON.stringify(fileData)}`);
+                console.log(`\n`);
             } catch (error) {
                 console.error(`Error getting file data from OpenAI API for ${file}:`, error);
                 continue;
@@ -61,14 +60,15 @@ async function processFiles() {
             }
 
             const newFileName = `${date} - ${sender} - ${summary} - ${objectName}${path.extname(originalPath)}`;
-            console.log('Response received from OpenAI API.');
-            console.log(`New Filename generated: ${newFileName}`);
+
+            console.log(`New Filename: ${newFileName}`);
+            console.log(`\n`);
 
             const propertyDir = await constructPropertyDir(basePropertyDir, objectName, date, category);
 
             const newFilePath = path.join(propertyDir, newFileName);
             try {
-                // await fs.rename(originalPath, newFilePath);
+                await fs.rename(originalPath, newFilePath);
                 console.log(`${file} has been processed and moved to ${newFilePath}.`);
             } catch (error) {
                 console.error(`Error renaming file ${originalPath} to ${newFilePath}:`, error);
