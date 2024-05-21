@@ -12,3 +12,6 @@ Before using File Renamer CLI, make sure you have the following installed on you
 ## Installation
 
 1. Clone the repository:
+
+## Start processing skript:
+`npm run start rename`
