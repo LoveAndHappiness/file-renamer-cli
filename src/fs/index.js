@@ -1,62 +1,61 @@
-// src/fs/index.js
-
-const pdfParse = require('pdf-parse');
-const fs = require('fs').promises;
 const path = require('path');
+const fs = require('fs').promises;
 const { getFileData } = require('../openai/api');
+const { extractTextFromPDF } = require('./extractText');
+const { loadProperties } = require('./loadproperties'); // Fixed casing to match file system
 
 // Path to the 'files' directory from 'src/fs/index.js'
 const filesDir = path.join(__dirname, '../../files');
-const processedDir = path.join(__dirname, '../../files/renamed');
+const processedDir = path.join(__dirname, '../../processed');
+
+// Ensure directory exists
+async function ensureDirectoryExists(dir) {
+    try {
+        await fs.mkdir(dir, { recursive: true });
+        console.log(`Directory created or already exists: ${dir}`);
+    } catch (error) {
+        console.error(`Error creating directory ${dir}:`, error);
+    }
+}
 
 async function processFiles() {
+    const properties = await loadProperties();
+    if (properties.length === 0) {
+        console.error('No properties loaded. Exiting.');
+        return;
+    }
+
     try {
-        // Read the contents of the 'files' directory
         const files = await fs.readdir(filesDir);
 
-        // Process each file in the 'files' directory
         for (const file of files) {
-            // Skip the 'renamed' directory
             if (file === 'renamed') continue;
 
-            // Get the full path to the file
             const originalPath = path.join(filesDir, file);
-            const processedPath = path.join(processedDir, file);
-
-            // Simulate file processing (e.g., OCR and renaming the file)
             console.log(`Processing file: ${file}...`);
 
-            // Extract text from PDF files
-            console.log('Extracting text from PDF...');
-
-            const dataBuffer = await fs.readFile(originalPath);
-            let text; // Define text variable to store extracted text
+            let text;
             try {
-                const data = await pdfParse(dataBuffer);
-                // Consider using only the text from the first 1-2 pages if applicable
-                text = data.text.substring(0, 2000); // Assign a value to text here
+                text = await extractTextFromPDF(originalPath);
                 console.log(`Extracted text from ${path.basename(originalPath)}:`, text.substring(0, 4000));
             } catch (error) {
                 console.error(`Error extracting text from ${originalPath}:`, error);
                 continue;
             }
 
-            // Ensure extracted text is valid
             if (!text) {
                 console.error(`No text extracted from ${originalPath}. Skipping file.`);
                 continue;
             }
 
-            // Verify text length and content
             console.log(`Length of extracted text: ${text.length}`);
             console.log(`Content of extracted text: ${text}`);
 
-            // Get new filename from OpenAI API
             console.log('Making request to OpenAI API...');
 
             let fileData;
             try {
-                fileData = await getFileData({ fileContent: text});
+                fileData = await getFileData({ fileContent: text, properties });
                 fileData = JSON.parse(fileData);
                 console.log(`File data received: ${JSON.stringify(fileData)}`);
             } catch (error) {
@@ -64,21 +63,21 @@ async function processFiles() {
                 continue;
             }
 
-            // Check if the required fields are present in the response
             const { date, sender, summary, object_name: objectName, category } = fileData;
             if (!date || !sender || !summary || !objectName || !category) {
                 console.error(`Incomplete data received from OpenAI API for ${file}:`, fileData);
                 continue;
             }
 
-            // Construct the new filename
             const newFileName = `${date} - ${sender} - ${summary} - ${objectName}${path.extname(originalPath)}`;
 
             console.log('Response received from OpenAI API.');
             console.log(`New Filename generated: ${newFileName}`);
 
-            // Actually renaming the file
-            const newFilePath = path.join(processedDir, newFileName);
+            const propertyDir = path.join('C:/Users/Georg/Nextcloud/Expimo/W1', objectName);  // Adjust the path accordingly
+            await ensureDirectoryExists(propertyDir);
+
+            const newFilePath = path.join(propertyDir, newFileName);
             try {
                 // await fs.rename(originalPath, newFilePath);
                 console.log(`${file} has been processed and moved to ${newFilePath}.`);
@@ -91,19 +90,5 @@ async function processFiles() {
     }
 }
 
-async function extractTextFromPDF(pdfPath) {
-    const dataBuffer = await fs.readFile(pdfPath);
-    try {
-        const data = await pdfParse(dataBuffer);
-        // Consider using only the text from the first 1-2 pages if applicable
-        const text = data.text; // You might want to trim or process the text further
-        console.log(`Extracted text from ${path.basename(pdfPath)}:`, text.substring(0, 2000));
-        return text;
-    } catch (error) {
-        console.error(`Error extracting text from ${pdfPath}:`, error);
-        return '';
-    }
-}
-
 // Export the function for use in other parts of your application
-module.exports = { processFiles, extractTextFromPDF };
+module.exports = { processFiles };
