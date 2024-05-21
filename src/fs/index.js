@@ -2,25 +2,16 @@ const path = require('path');
 const fs = require('fs').promises;
 const { getFileData } = require('../openai/api');
 const { extractTextFromPDF } = require('./extractText');
-const { loadProperties } = require('./loadproperties'); // Fixed casing to match file system
+const { loadProperties } = require('./loadProperties');
+const { constructPropertyDir } = require('./constructPropertyDir');
 
 // Path to the 'files' directory from 'src/fs/index.js'
 const filesDir = path.join(__dirname, '../../files');
-const processedDir = path.join(__dirname, '../../processed');
-
-// Ensure directory exists
-async function ensureDirectoryExists(dir) {
-    try {
-        await fs.mkdir(dir, { recursive: true });
-        console.log(`Directory created or already exists: ${dir}`);
-    } catch (error) {
-        console.error(`Error creating directory ${dir}:`, error);
-    }
-}
+const basePropertyDir = 'C:/Users/Georg/Nextcloud/Expimo/W1'; // Base directory for properties
 
 async function processFiles() {
     const properties = await loadProperties();
-    if (properties.length === 0) {
+    if (!properties.length) {
         console.error('No properties loaded. Exiting.');
         return;
     }
@@ -70,12 +61,10 @@ async function processFiles() {
             }
 
             const newFileName = `${date} - ${sender} - ${summary} - ${objectName}${path.extname(originalPath)}`;
-
             console.log('Response received from OpenAI API.');
             console.log(`New Filename generated: ${newFileName}`);
 
-            const propertyDir = path.join('C:/Users/Georg/Nextcloud/Expimo/W1', objectName);  // Adjust the path accordingly
-            await ensureDirectoryExists(propertyDir);
+            const propertyDir = await constructPropertyDir(basePropertyDir, objectName, date, category);
 
             const newFilePath = path.join(propertyDir, newFileName);
             try {
