@@ -91,7 +91,7 @@ async function processFiles() {
 
             const propertyDir = await constructPropertyDir(basePropertyDir, objectName, date, category);
             const newFilePath = path.join(propertyDir, newFileName);
-            // await fs.rename(renamedFilePath, newFilePath); // Move the renamed file to the new directory
+            await fs.rename(renamedFilePath, newFilePath); // Move the renamed file to the new directory
             console.log(`${newFileName} has been processed and moved to ${newFilePath}.`);
         }
     } catch (error) {
