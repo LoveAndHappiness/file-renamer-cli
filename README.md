@@ -15,3 +15,16 @@ Before using File Renamer CLI, make sure you have the following installed on you
 
 ## Start processing skript:
 `npm run start rename`
+
+##  To-Do
+- Configuration File
+- Continuous Run (Run the tool continuously in the background, so that it detects new files and processes them)
+- User Interface in HTML
+- File Validation an dPreprocessing
+- Advanced Metadata Extraction (Document Summarization)
+- Integration with other Systems (Podio)
+- Performance Improvements (Batch processing)
+- Backup Mechanism (Create backups of original files before processing to ensure data is not lost)
+- Logging and Error Handling
+- Testing and Continuous Integration
+- Documentation
