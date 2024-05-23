@@ -44,7 +44,7 @@ async function processFiles() {
 
             let text;
             try {
-                text = await extractTextFromPDF(originalPath);
+                text = await extractTextFromPDF(originalPath, 10000); // Set timeout to 10 seconds
                 text = text.substring(0, 4000); // Limit the text to the first 4000 characters
                 console.log(`Extracted text from ${path.basename(originalPath)}:`, text);
             } catch (error) {

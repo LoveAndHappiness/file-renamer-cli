@@ -1,7 +1,7 @@
 function generatePrompt(properties) {
     return `Extract the following information from the file content and provide it in JSON format:
     1. Date in the format YYYY-MM-DD.
-    2. Sender, abbreviated where applicable (e.g., 'Rechtsanwalt' as 'RA', 'WSW Energie & Wasser AG' as 'WSW', 'TÜV Rheinland Industrie Service GmbH' as 'TÜV', etc.).
+    2. Sender, abbreviated where applicable (e.g., 'Rechtsanwalt' as 'RA', 'WSW Energie & Wasser AG' as 'WSW', 'TÜV Rheinland Industrie Service GmbH' as 'TÜV', 'Techem Energy Services GmbH' as 'Techem', etc.).
     3. A summary of the content in German, up to four words.
     4. The object name, chosen from the predefined list, formatted as '[City Code]-[Street Name and Number]'. If no match is found, use 'Unknown Object'. Make sure you don't use just the recipient address, since the property management company Expimo is located at the same address as the property we manage.
     5. Classify the document into one of the following categories:
